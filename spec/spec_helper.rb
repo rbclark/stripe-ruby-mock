@@ -39,6 +39,7 @@ RSpec.configure do |c|
       allow(StripeMock).to receive(:start).and_return(nil)
       allow(StripeMock).to receive(:stop).and_return(nil)
       Stripe.api_key = api_key
+      Stripe.api_version = ENV['STRIPE_API_VERSION']
     end
     c.after(:each) { sleep 0.01 }
   else
