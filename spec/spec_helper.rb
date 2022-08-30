@@ -30,19 +30,9 @@ RSpec.configure do |c|
       c.filter_run_excluding :mock_server => true, :oauth => true
     end
 
-    if ENV['IS_TRAVIS']
-      puts "Travis ruby version: #{RUBY_VERSION}"
-      api_key = case RUBY_VERSION
-      when '2.4.6'  then ENV['STRIPE_TEST_SECRET_KEY_A']
-      when '2.5.5' then ENV['STRIPE_TEST_SECRET_KEY_B']
-      when '2.6.3'  then ENV['STRIPE_TEST_SECRET_KEY_C']
-      when '2.7.0'  then ENV['STRIPE_TEST_SECRET_KEY_D']
-      end
-    else
-      api_key = ENV['STRIPE_TEST_SECRET_KEY']
-      if api_key.nil? || api_key == ''
-        raise "Please set your STRIPE_TEST_SECRET_KEY environment variable."
-      end
+    api_key = ENV['STRIPE_TEST_SECRET_KEY']
+    if api_key.nil? || api_key == ''
+      raise "Please set your STRIPE_TEST_SECRET_KEY environment variable."
     end
 
     c.before(:each) do

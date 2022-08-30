@@ -1,0 +1,51 @@
+name: Tests
+
+on:
+  pull_request:
+    branches:
+      - '*'
+  push:
+    branches:
+      - master
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ['2.6', '2.7', '3.0', '3.1']
+
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler: default
+          bundler-cache: true
+
+      - name: Set Ruby 2.6 STRIPE_TEST_SECRET_KEY
+        if: ${{ matrix.ruby == '2.6' }}
+        run: |
+          echo "STRIPE_TEST_SECRET_KEY=sk_test_BsztzqQjzd7lqkgo1LjEG5DF00KzH7tWKF"
+
+      - name: Set Ruby 2.7 STRIPE_TEST_SECRET_KEY
+        if: ${{ matrix.ruby == '2.7' }}
+        run: |
+          echo "STRIPE_TEST_SECRET_KEY=sk_test_rKCEu0x8jzg6cKPqoey8kUPQ00usQO3KYE"
+
+      - name: Set Ruby 3.0 STRIPE_TEST_SECRET_KEY
+        if: ${{ matrix.ruby == '3.0' }}
+        run: |
+          echo "STRIPE_TEST_SECRET_KEY=sk_test_qeaB7R6Ywp8sC9pzd1ZIABH700YLC7nhmZ"
+
+      - name: Set Ruby 3.1 STRIPE_TEST_SECRET_KEY
+        if: ${{ matrix.ruby == '3.1' }}
+        run: |
+          echo "STRIPE_TEST_SECRET_KEY=sk_test_r1NwHkUW7UyoozyP4aEBD6cs00CI5uDiGq"
+
+      - name: Run tests
+        run: |
+          bundle exec rspec
+          bundle exec rspec -t live
